@@ -1,7 +1,13 @@
 ---
+- name: set up mysql packages
+  sudo: yes
+  shell: wget -O /etc/yum.repos.d/mysql-community-release-el7-5.noarch.rpm http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm && rpm -ivh --replacepkgs /etc/yum.repos.d/mysql-community-release-el7-5.noarch.rpm
+
 - name: Install Mysql package
   yum: name={{ item }} state=present
   with_items:
+   - mysql
+   - mysql-devel
    - mysql-server
    - MySQL-python
    - libselinux-python
@@ -12,7 +18,7 @@
 
 - name: Create Mysql configuration file
   template: src=my.cnf.j2 dest=/etc/my.cnf
-  notify: 
+  notify:
   - restart mysql
 
 - name: Start Mysql Service
